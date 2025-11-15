@@ -35,12 +35,27 @@ def greedy_coin(change):
 
 
 @click.command()
-@click.argument("change", type=float)
-def main(change):
+@click.option("--dollars", type=int, default=0, help="Amount in dollars")
+@click.option("--cents", type=int, default=0, help="Amount in cents")
+def main(dollars, cents):
     """Return the minimum number of coins for a given change
 
-    Example: ./greedy_coin.py 0.99
+    Example: ./greedy_coin.py --dollars 1 --cents 50
+    Example: ./greedy_coin.py --cents 99
     """
+    # Validate input
+    if dollars < 0 or cents < 0:
+        click.echo("Error: Amounts cannot be negative")
+        return
+    if cents >= 100:
+        click.echo("Error: Cents must be less than 100")
+        return
+    if dollars == 0 and cents == 0:
+        click.echo("Error: Please specify an amount using --dollars and/or --cents")
+        return
+    
+    # Convert to total change in dollars
+    change = dollars + (cents / 100)
     greedy_coin(change)
 
 
